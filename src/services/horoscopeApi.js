@@ -1,49 +1,63 @@
-import { API_BASE_URL, AZTRO_API_URL } from '../utils/constants';
+import { API_BASE_URL, AZTRO_API_URL, AGENT_API_URL } from '../utils/constants';
 
 class HoroscopeApiService {
-  // Fetch horoscope from horoscope-api.herokuapp.com
+  async getAgentHoroscope(sign, period = 'today', details = null) {
+    try {
+      const res = await fetch(AGENT_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sign, period, details })
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      return {
+        success: true,
+        data: {
+          sign: data.sign || sign,
+          period: data.period || period,
+          horoscope: data.text,
+          date: data.date || new Date().toISOString().split('T')[0],
+          mood: data.mood,
+          lucky_number: data.lucky_number,
+          color: data.color,
+          compatibility: data.compatibility,
+          source: data.source || 'agent'
+        }
+      };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  }
+
   async getHoroscope(sign, period = 'today') {
     try {
       const response = await fetch(`${API_BASE_URL}/${period}/${sign}`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
       return {
         success: true,
         data: {
-          sign: sign,
-          period: period,
+          sign,
+          period,
           horoscope: data.horoscope,
           date: data.date,
           source: 'horoscope-api'
         }
       };
     } catch (error) {
-      console.error('Error fetching horoscope:', error);
-      return {
-        success: false,
-        error: error.message
-      };
+      return { success: false, error: error.message };
     }
   }
 
-  // Fetch horoscope from aztro API (alternative)
   async getAztroHoroscope(sign) {
     try {
-      const response = await fetch(`${AZTRO_API_URL}/?sign=${sign}&type=today`, {
-        method: 'POST'
-      });
-      
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
+      const response = await fetch(`${AZTRO_API_URL}/?sign=${sign}&type=today`, { method: 'POST' });
+      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
       const data = await response.json();
       return {
         success: true,
         data: {
-          sign: sign,
+          sign,
           period: 'today',
           horoscope: data.description,
           date: data.current_date,
@@ -56,34 +70,10 @@ class HoroscopeApiService {
         }
       };
     } catch (error) {
-      console.error('Error fetching aztro horoscope:', error);
-      return {
-        success: false,
-        error: error.message
-      };
+      return { success: false, error: error.message };
     }
   }
 
-  // Get multiple horoscopes for different periods
-  async getMultipleHoroscopes(sign, periods = ['today', 'tomorrow']) {
-    try {
-      const promises = periods.map(period => this.getHoroscope(sign, period));
-      const results = await Promise.all(promises);
-      
-      return {
-        success: true,
-        data: results.filter(result => result.success).map(result => result.data)
-      };
-    } catch (error) {
-      console.error('Error fetching multiple horoscopes:', error);
-      return {
-        success: false,
-        error: error.message
-      };
-    }
-  }
-
-  // Fallback method - returns mock data if APIs fail
   getMockHoroscope(sign, period = 'today') {
     const mockHoroscopes = {
       aries: {
@@ -163,8 +153,8 @@ class HoroscopeApiService {
     return {
       success: true,
       data: {
-        sign: sign,
-        period: period,
+        sign,
+        period,
         horoscope: mockHoroscopes[sign]?.[period] || "Your horoscope is being prepared with cosmic wisdom.",
         date: new Date().toISOString().split('T')[0],
         source: 'mock-data'
@@ -173,4 +163,5 @@ class HoroscopeApiService {
   }
 }
 
-export default new HoroscopeApiService(); 
+const horoscopeApi = new HoroscopeApiService();
+export default horoscopeApi;

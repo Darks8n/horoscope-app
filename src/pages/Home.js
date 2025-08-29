@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import ZodiacSelector from '../components/ZodiacSelector';
 import PeriodSelector from '../components/PeriodSelector';
 import HoroscopeCard from '../components/HoroscopeCard';
@@ -11,6 +11,9 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Refs for scrolling
+  const periodSectionRef = useRef(null);
+
   useEffect(() => {
     if (selectedSign && selectedPeriod) {
       fetchHoroscope();
@@ -22,6 +25,7 @@ const Home = () => {
     setIsLoading(true);
     setError(null);
     try {
+      // For now, mock-only so UI works end-to-end
       const result = horoscopeApi.getMockHoroscope(selectedSign, selectedPeriod);
       setHoroscope(result.data);
     } catch (e) {
@@ -31,6 +35,19 @@ const Home = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleSignSelect = (signId) => {
+    // Set sign and force period to 'today'
+    setSelectedSign(signId);
+    setSelectedPeriod('today');
+
+    // Scroll to the period buttons after they render
+    requestAnimationFrame(() => {
+      if (periodSectionRef.current) {
+        periodSectionRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
   };
 
   return (
@@ -44,14 +61,16 @@ const Home = () => {
 
       <ZodiacSelector
         selectedSign={selectedSign}
-        onSignSelect={setSelectedSign}
+        onSignSelect={handleSignSelect}
       />
 
       {selectedSign && (
-        <PeriodSelector
-          selectedPeriod={selectedPeriod}
-          onPeriodSelect={setSelectedPeriod}
-        />
+        <div ref={periodSectionRef}>
+          <PeriodSelector
+            selectedPeriod={selectedPeriod}
+            onPeriodSelect={setSelectedPeriod}
+          />
+        </div>
       )}
 
       <HoroscopeCard

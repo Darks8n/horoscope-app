@@ -1,0 +1,23 @@
+.aiinsights-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    text-align: center;
+  }
+  
+  .aiinsights-title {
+    margin: 0 0 0.75rem 0;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .aiinsights-text {
+    color: #555;
+    font-size: 1.1rem;
+    line-height: 1.7;
+  }

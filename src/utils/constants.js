@@ -26,7 +26,7 @@ export const API_BASE_URL = 'https://horoscope-api.herokuapp.com/horoscope';
 export const AZTRO_API_URL = 'https://aztro.sameerkumar.website';
 
 // OUR AI AGENT ENDPOINT (replace with real URL)
-//export const AGENT_API_URL = 'https://OUR-AI-AGENT-DOMAIN/api/horoscope';
+export const AGENT_API_URL = 'https://OUR-AI-AGENT-DOMAIN/api/horoscope';
 
 export const ELEMENT_COLORS = {
   Fire: '#FF6B6B',
