@@ -36,4 +36,4 @@ const ZodiacSelector = ({ selectedSign, onSignSelect }) => {
   );
 };
 
-export default ZodiacSelector; 
+export default ZodiacSelector;
