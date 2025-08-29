@@ -1,5 +1,3 @@
-console.log('Constants file loaded');
-
 export const ZODIAC_SIGNS = [
   { id: 'aries', name: 'Aries', symbol: '♈', dates: 'Mar 21 - Apr 19', element: 'Fire' },
   { id: 'taurus', name: 'Taurus', symbol: '♉', dates: 'Apr 20 - May 20', element: 'Earth' },
@@ -23,12 +21,16 @@ export const HOROSCOPE_PERIODS = [
   { id: 'monthly', name: 'This Month' }
 ];
 
+// public endpoints (kept for optional fallback)
 export const API_BASE_URL = 'https://horoscope-api.herokuapp.com/horoscope';
 export const AZTRO_API_URL = 'https://aztro.sameerkumar.website';
+
+// OUR AI AGENT ENDPOINT (replace with real URL)
+//export const AGENT_API_URL = 'https://OUR-AI-AGENT-DOMAIN/api/horoscope';
 
 export const ELEMENT_COLORS = {
   Fire: '#FF6B6B',
   Earth: '#4ECDC4',
   Air: '#45B7D1',
   Water: '#96CEB4'
-}; 
+};
